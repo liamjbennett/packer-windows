@@ -4,29 +4,34 @@
 
 This repository contains Windows templates that can be used to create boxes for Vagrant using Packer ([Website](packer.io)) ([Github](http://github.com/mitchellh/packer)).
 
-This repo began by borrowing bits from the VeeWee Windows templates (https://github.com/jedi4ever/veewee/tree/master/templates). Modifications were made to work with Packer and the VMware Fusion provider for Packer and Vagrant.
+This repo began by borrowing bits from the VeeWee Windows templates (https://github.com/jedi4ever/veewee/tree/master/templates). Modifications were made to work with Packer and the VMware Fusion / VirtualBox providers for Packer and Vagrant.
 
 ### Packer Version
 
-[Packer](https://github.com/mitchellh/packer/blob/master/CHANGELOG.md) `0.5.0` or greater is required.
+[Packer](https://github.com/mitchellh/packer/blob/master/CHANGELOG.md) `0.5.1` or greater is required.
 
 ### Windows Versions
 
-The following Windows versions are known to work (built with VMware Fusion 6.0.2):
+The following Windows versions are known to work (built with VMware Fusion 6.0.2 and VirtualBox 4.3.6):
 
-* Windows 2008 R2
-  * [![Build Status - Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-develop-2008-r2)](https://packer.ci.cloudbees.com/job/packer-windows-develop-2008-r2/) `Develop`
-  * [![Build Status - Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-master-2008-r2)](https://packer.ci.cloudbees.com/job/packer-windows-master-2008-r2/) `Master`
-* Windows 2012
-  * [![Build Status - Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-develop-2012)](https://packer.ci.cloudbees.com/job/packer-windows-develop-2012/) `Develop`
-  * [![Build Status - Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-master-2012)](https://packer.ci.cloudbees.com/job/packer-windows-master-2012/) `Master`
-* Windows 2012 R2
-  * [![Build Status - Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-develop-2012-r2)](https://packer.ci.cloudbees.com/job/packer-windows-develop-2012-r2/) `Develop`
-  * [![Build Status - Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-master-2012-r2)](https://packer.ci.cloudbees.com/job/packer-windows-master-2012-r2/) `Master`
+|                              | Develop                                                                                                                                                                                                               | Master                                                                                                                                                                                                             |
+| ---------------------------- |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Windows 2008 R2 SP1 Standard | [![Build Status - Windows 2008 R2 SP1 Standard on Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-develop-2008-r2)](https://packer.ci.cloudbees.com/job/packer-windows-develop-2008-r2/) | [![Build Status - Windows 2008 R2 SP1 Standard on Master](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-master-2008-r2)](https://packer.ci.cloudbees.com/job/packer-windows-master-2008-r2/) |
+| Windows 2012 Standard        | [![Build Status - Windows 2012 Standard on Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-develop-2012)](https://packer.ci.cloudbees.com/job/packer-windows-develop-2012/)              | [![Build Status - Windows 2012 Standard on Master](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-master-2012)](https://packer.ci.cloudbees.com/job/packer-windows-master-2012/)              |
+| Windows 2012 R2 Standard     | [![Build Status - Windows 2012 R2 Standard on Develop](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-develop-2012-r2)](https://packer.ci.cloudbees.com/job/packer-windows-develop-2012-r2/)     | [![Build Status - Windows 2012 R2 Standard on Master](https://packer.ci.cloudbees.com/buildStatus/icon?job=packer-windows-master-2012-r2)](https://packer.ci.cloudbees.com/job/packer-windows-master-2012-r2/)     |
 
 ### Windows Editions
 
-All Windows Server versions are defaulted to the Server Standard edition. You can modify this by editing the Autounattend.xml file, changing the `ImageInstall`>`OSImage`>`InstallFrom`>`MetaData`>`Value` element (e.g. to Windows Server 2012 R2 SERVERDATACENTER). You also need to update the `UserData`>`ProductKey` element with the appropriate key from http://technet.microsoft.com/en-us/library/jj612867.aspx.
+All Windows Server versions are defaulted to the Server Standard edition. You can modify this by editing the Autounattend.xml file, changing the `ImageInstall`>`OSImage`>`InstallFrom`>`MetaData`>`Value` element (e.g. to Windows Server 2012 R2 SERVERDATACENTER).
+
+### Product Keys
+
+The `Autounattend.xml` files are configured to work correctly with trial ISOs (which will be downloaded and cached for you the first time you perform a `packer build`). If you would like to use retail or volume license ISOs, you need to update the `UserData`>`ProductKey` element as follows:
+
+* Uncomment the `<Key>...</Key>` element
+* Insert your product key into the `Key` element
+
+If you are going to configure your VM as a KMS client, you can use the product keys at http://technet.microsoft.com/en-us/library/jj612867.aspx. These are the default values used in the `Key` element.
 
 ### Windows Updates
 
@@ -63,7 +68,7 @@ Doing so will give you hours back in your day, which is a good thing.
 
 ### OpenSSH / WinRM
 
-Currently, [Packer](http://packer.io) has a single communitator that uses SSH. This means we need an SSH server installed on Windows - which is not optimal as we could use WinRM to communicate with the Windows VM. In the short term, everything works well with SSH; in the medium term, work is underway on a WinRM communicator for Packer. 
+Currently, [Packer](http://packer.io) has a single communitator that uses SSH. This means we need an SSH server installed on Windows - which is not optimal as we could use WinRM to communicate with the Windows VM. In the short term, everything works well with SSH; in the medium term, work is underway on a WinRM communicator for Packer.
 
 If you have serious objections to OpenSSH being installed, you can always add another stage to your build pipeline:
 
@@ -73,7 +78,7 @@ If you have serious objections to OpenSSH being installed, you can always add an
 
 ### Using .box Files With Vagrant
 
-If you are going to use the .box files produced by the project with Vagrant, you should also use the [vagrant-windows](https://github.com/WinRb/vagrant-windows) plugin, which will ensure Vagrant works well with Windows. This will also allow Vagrant to use WinRM to communicate with the box. 
+If you are going to use the .box files produced by the project with Vagrant, you should also use the [vagrant-windows](https://github.com/WinRb/vagrant-windows) plugin, which will ensure Vagrant works well with Windows. This will also allow Vagrant to use WinRM to communicate with the box.
 
 ### Getting Started
 
@@ -98,4 +103,3 @@ Pull requests welcomed. Please ensure you create your edits in a branch off of t
 [CloudBees](http://www.cloudbees.com) is providing a hosted [Jenkins](http://jenkins-ci.org/) master through their CloudBees FOSS program. We also use their [On-Premise Executor](https://developer.cloudbees.com/bin/view/DEV/On-Premise+Executors) feature to connect a physical [Mac Mini Server](http://www.apple.com/mac-mini/server/) running VMware Fusion.
 
 ![Powered By CloudBees](http://www.cloudbees.com/sites/default/files/Button-Powered-by-CB.png "Powered By CloudBees")![Built On DEV@Cloud](http://www.cloudbees.com/sites/default/files/Button-Built-on-CB-1.png "Built On DEV@Cloud")
- 
